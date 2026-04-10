@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from '../components/Toast';
+import { theme, shadows } from '../theme';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -42,7 +43,12 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0a1628', '#1a3a6b']} style={styles.container}>
+    <LinearGradient
+      colors={['#0c121c', '#1a2f4a', '#2d4a6f']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       <Toast
         visible={toast.visible}
         message={toast.message}
@@ -50,35 +56,40 @@ export default function LoginScreen({ navigation }) {
         onHide={() => setToast(t => ({ ...t, visible: false }))}
       />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.inner}>
-        <Text style={styles.logo}>🎬 MovieTix</Text>
-        <Text style={styles.subtitle}>Đặt vé xem phim dễ dàng</Text>
+        <View style={styles.brandBlock}>
+          <Text style={styles.kicker}>MovieTix</Text>
+          <Text style={styles.tagline}>Đặt vé chỉ vài chạm — không xếp hàng</Text>
+        </View>
 
         <View style={styles.card}>
           <Text style={styles.title}>Đăng nhập</Text>
+          <Text style={styles.cardHint}>Nhập email và mật khẩu đã đăng ký</Text>
 
+          <Text style={styles.fieldLabel}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#aaa"
+            placeholder="you@email.com"
+            placeholderTextColor={theme.colors.muted}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
+          <Text style={styles.fieldLabel}>Mật khẩu</Text>
           <TextInput
             style={styles.input}
-            placeholder="Mật khẩu"
-            placeholderTextColor="#aaa"
+            placeholder="••••••••"
+            placeholderTextColor={theme.colors.muted}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading} activeOpacity={0.9}>
             {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Đăng nhập</Text>}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.linkWrap}>
             <Text style={styles.link}>Chưa có tài khoản? <Text style={styles.linkBold}>Đăng ký</Text></Text>
           </TouchableOpacity>
         </View>
@@ -90,19 +101,35 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   inner: { flex: 1, justifyContent: 'center', padding: 24 },
-  logo: { fontSize: 36, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginBottom: 8 },
-  subtitle: { color: '#a0b4d0', textAlign: 'center', marginBottom: 32, fontSize: 14 },
-  card: { backgroundColor: '#fff', borderRadius: 20, padding: 24, elevation: 8 },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#1a3a6b', marginBottom: 20, textAlign: 'center' },
+  brandBlock: { marginBottom: 28 },
+  kicker: {
+    fontSize: 38, fontWeight: '900', color: '#fff', letterSpacing: -1,
+    textShadowColor: 'rgba(0,0,0,0.35)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 8,
+  },
+  tagline: { color: '#c4ced9', fontSize: 15, marginTop: 10, lineHeight: 22, maxWidth: 280 },
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.97)',
+    borderRadius: theme.radius.xl,
+    padding: 26,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.5)',
+    ...shadows.card,
+  },
+  title: { fontSize: 24, fontWeight: '900', color: theme.colors.ink, marginBottom: 6 },
+  cardHint: { fontSize: 13, color: theme.colors.muted, marginBottom: 20 },
+  fieldLabel: { fontSize: 12, fontWeight: '800', color: theme.colors.inkSecondary, marginBottom: 6, letterSpacing: 0.3 },
   input: {
-    borderWidth: 1, borderColor: '#dde3f0', borderRadius: 10,
-    padding: 14, marginBottom: 14, color: '#333', fontSize: 15
+    borderWidth: 1, borderColor: theme.colors.border, borderRadius: theme.radius.md,
+    paddingHorizontal: 16, paddingVertical: 14, marginBottom: 16, color: theme.colors.ink, fontSize: 16,
+    backgroundColor: theme.colors.surfaceMuted,
   },
   button: {
-    backgroundColor: '#1a3a6b', borderRadius: 10,
-    padding: 15, alignItems: 'center', marginTop: 4, marginBottom: 16
+    backgroundColor: theme.colors.accent,
+    borderRadius: theme.radius.md,
+    padding: 16, alignItems: 'center', marginTop: 6, marginBottom: 18,
   },
-  buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  link: { textAlign: 'center', color: '#888', fontSize: 14 },
-  linkBold: { color: '#1a3a6b', fontWeight: 'bold' },
+  buttonText: { color: '#fff', fontWeight: '800', fontSize: 16, letterSpacing: 0.4 },
+  linkWrap: { alignItems: 'center' },
+  link: { textAlign: 'center', color: theme.colors.muted, fontSize: 14 },
+  linkBold: { color: theme.colors.accentHover, fontWeight: '800' },
 });

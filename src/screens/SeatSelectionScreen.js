@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet,
-  ScrollView, ActivityIndicator, Modal
+  ScrollView, ActivityIndicator
 } from 'react-native';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import Toast from '../components/Toast';
+import { theme } from '../theme';
 
 const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const COLS = 8;
@@ -56,7 +57,7 @@ export default function SeatSelectionScreen({ route, navigation }) {
   if (loading) {
     return (
       <View style={styles.loadingWrap}>
-        <ActivityIndicator size="large" color="#1d4ed8" />
+        <ActivityIndicator size="large" color={theme.colors.accent} />
         <Text style={styles.loadingText}>Đang tải sơ đồ ghế...</Text>
       </View>
     );
@@ -151,47 +152,51 @@ export default function SeatSelectionScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f172a' },
-  loadingWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0f172a' },
-  loadingText: { color: '#94a3b8', marginTop: 12 },
+  container: { flex: 1, backgroundColor: theme.colors.primaryDark },
+  loadingWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.primaryDark },
+  loadingText: { color: '#9ca3af', marginTop: 14, fontWeight: '600' },
 
-  infoBar: { backgroundColor: '#1e293b', paddingHorizontal: 20, paddingVertical: 12 },
-  infoTitle: { color: '#fff', fontSize: 15, fontWeight: '800' },
-  infoSub: { color: '#64748b', fontSize: 12, marginTop: 2 },
-
-  screenWrap: { alignItems: 'center', paddingVertical: 16 },
-  screen: {
-    width: '75%', height: 6, backgroundColor: '#3b82f6',
-    borderRadius: 4, marginBottom: 6,
-    shadowColor: '#3b82f6', shadowOpacity: 0.8, shadowRadius: 12, elevation: 8,
+  infoBar: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    paddingHorizontal: 20, paddingVertical: 14,
+    borderBottomWidth: 1, borderBottomColor: 'rgba(251,191,36,0.12)',
   },
-  screenLabel: { color: '#475569', fontSize: 11, letterSpacing: 3, fontWeight: '700' },
+  infoTitle: { color: '#f8fafc', fontSize: 16, fontWeight: '900' },
+  infoSub: { color: '#9ca3af', fontSize: 12, marginTop: 4 },
+
+  screenWrap: { alignItems: 'center', paddingVertical: 18 },
+  screen: {
+    width: '78%', height: 5, backgroundColor: theme.colors.accent,
+    borderRadius: 3, marginBottom: 8,
+    shadowColor: theme.colors.accent, shadowOpacity: 0.55, shadowRadius: 16, elevation: 10,
+  },
+  screenLabel: { color: '#6b7280', fontSize: 11, letterSpacing: 4, fontWeight: '800' },
 
   seatsContainer: { paddingHorizontal: 12, paddingBottom: 8 },
   rowContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10, justifyContent: 'center' },
-  rowLabel: { width: 18, color: '#475569', fontWeight: '700', fontSize: 12, textAlign: 'center' },
+  rowLabel: { width: 18, color: '#6b7280', fontWeight: '800', fontSize: 12, textAlign: 'center' },
   seatRow: { flexDirection: 'row', gap: 6, marginHorizontal: 8 },
-  seat: { width: 34, height: 30, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
-  seat_available: { backgroundColor: '#1e3a5f', borderWidth: 1, borderColor: '#2563eb' },
-  seat_selected: { backgroundColor: '#f5a623', borderWidth: 1, borderColor: '#fbbf24' },
-  seat_booked: { backgroundColor: '#1e293b', borderWidth: 1, borderColor: '#334155' },
-  seatText: { fontSize: 10, fontWeight: '700', color: '#93c5fd' },
-  seatTextBooked: { color: '#334155' },
+  seat: { width: 34, height: 30, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
+  seat_available: { backgroundColor: '#1a2740', borderWidth: 1, borderColor: 'rgba(217,119,6,0.45)' },
+  seat_selected: { backgroundColor: theme.colors.accent, borderWidth: 1, borderColor: '#fbbf24' },
+  seat_booked: { backgroundColor: '#151b26', borderWidth: 1, borderColor: '#2d3544' },
+  seatText: { fontSize: 10, fontWeight: '800', color: '#fcd34d' },
+  seatTextBooked: { color: '#3d4554' },
 
-  legend: { flexDirection: 'row', justifyContent: 'center', gap: 24, paddingVertical: 10, backgroundColor: '#0f172a' },
+  legend: { flexDirection: 'row', justifyContent: 'center', gap: 24, paddingVertical: 12, backgroundColor: theme.colors.primaryDark },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   legendDot: { width: 18, height: 14, borderRadius: 4 },
-  legendText: { fontSize: 12, color: '#64748b' },
+  legendText: { fontSize: 12, color: '#9ca3af' },
 
   footer: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#1e293b', padding: 16, paddingBottom: 24,
-    borderTopWidth: 1, borderTopColor: '#334155',
+    backgroundColor: '#111827', padding: 16, paddingBottom: 26,
+    borderTopWidth: 1, borderTopColor: 'rgba(251,191,36,0.15)',
   },
   footerInfo: { flex: 1, marginRight: 12 },
-  footerSeats: { color: '#94a3b8', fontSize: 12, marginBottom: 2 },
-  footerPrice: { color: '#fff', fontSize: 18, fontWeight: '900' },
-  continueBtn: { backgroundColor: '#1d4ed8', borderRadius: 12, paddingVertical: 13, paddingHorizontal: 20 },
-  continueBtnDisabled: { backgroundColor: '#334155' },
+  footerSeats: { color: '#9ca3af', fontSize: 12, marginBottom: 2 },
+  footerPrice: { color: '#fbbf24', fontSize: 19, fontWeight: '900' },
+  continueBtn: { backgroundColor: theme.colors.accent, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 20 },
+  continueBtnDisabled: { backgroundColor: '#374151' },
   continueBtnText: { color: '#fff', fontWeight: '800', fontSize: 14 },
 });

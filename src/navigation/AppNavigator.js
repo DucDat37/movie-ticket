@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Platform } from 'react-native';
 import { auth } from '../config/firebase';
 import InAppNotification from '../components/InAppNotification';
+import { theme } from '../theme';
 
 // Global notification context
 export const NotificationContext = createContext(null);
@@ -25,8 +26,8 @@ const Tab = createBottomTabNavigator();
 
 const TABS = [
   { name: 'Home', label: 'Phim', icon: '▶', activeIcon: '▶' },
-  { name: 'Tickets', label: 'Vé của tôi', icon: '◈', activeIcon: '◈' },
-  { name: 'Profile', label: 'Tài khoản', icon: '◉', activeIcon: '◉' },
+  { name: 'Tickets', label: 'Vé của tôi', icon: '◆', activeIcon: '◆' },
+  { name: 'Profile', label: 'Tài khoản', icon: '●', activeIcon: '●' },
 ];
 
 function CustomTabBar({ state, descriptors, navigation }) {
@@ -65,31 +66,33 @@ function CustomTabBar({ state, descriptors, navigation }) {
 const tabStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e2e8f0',
-    paddingBottom: Platform.OS === 'ios' ? 20 : 8,
-    paddingTop: 8,
-    elevation: 16,
+    backgroundColor: theme.colors.tabBar,
+    paddingBottom: Platform.OS === 'ios' ? 22 : 10,
+    paddingTop: 10,
+    paddingHorizontal: 8,
+    elevation: 24,
     shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: -4 },
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.06)',
   },
   tab: {
     flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 4,
   },
   tabActive: {},
   iconWrap: {
-    width: 40, height: 28, borderRadius: 14,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 2,
+    width: 44, height: 30, borderRadius: 15,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 4,
   },
   iconWrapActive: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: 'rgba(217, 119, 6, 0.18)',
   },
-  icon: { fontSize: 16, color: '#94a3b8' },
-  iconActive: { color: '#1d4ed8' },
-  label: { fontSize: 11, fontWeight: '600', color: '#94a3b8' },
-  labelActive: { color: '#1d4ed8', fontWeight: '800' },
+  icon: { fontSize: 15, color: theme.colors.tabInactive },
+  iconActive: { color: theme.colors.accent },
+  label: { fontSize: 11, fontWeight: '600', color: theme.colors.tabInactive, letterSpacing: 0.2 },
+  labelActive: { color: '#fbbf24', fontWeight: '800' },
 });
 
 function MainTabs() {
@@ -130,9 +133,10 @@ function AppStack() {
         component={SeatSelectionScreen}
         options={{
           title: 'Chọn ghế',
-          headerStyle: { backgroundColor: '#0f172a' },
-          headerTintColor: '#fff',
-          headerTitleStyle: { fontWeight: '800' },
+          headerStyle: { backgroundColor: theme.colors.tabBar },
+          headerTintColor: '#fbbf24',
+          headerTitleStyle: { fontWeight: '800', color: '#f8fafc' },
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen
@@ -159,9 +163,9 @@ export default function AppNavigator() {
 
   if (user === undefined) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0f2552' }}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-        <Text style={{ color: '#7da8d8', marginTop: 12, fontSize: 14 }}>Đang tải...</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.primaryDark }}>
+        <ActivityIndicator size="large" color={theme.colors.accent} />
+        <Text style={{ color: '#a8b0bc', marginTop: 14, fontSize: 14, fontWeight: '600' }}>Đang tải...</Text>
       </View>
     );
   }

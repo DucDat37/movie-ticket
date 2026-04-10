@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db, auth } from '../config/firebase';
+import { theme, shadows } from '../theme';
 
 export default function TicketsScreen() {
   const [tickets, setTickets] = useState([]);
@@ -75,7 +76,7 @@ export default function TicketsScreen() {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#1d4ed8" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={styles.loadingText}>Đang tải vé...</Text>
         </View>
       ) : tickets.length === 0 ? (
@@ -141,74 +142,73 @@ function ModalRow({ label, value, highlight }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f1f5f9' },
+  container: { flex: 1, backgroundColor: theme.colors.bg },
 
   header: {
-    backgroundColor: '#0f2552', paddingTop: 52, paddingBottom: 20,
+    backgroundColor: theme.colors.primaryDark, paddingTop: 52, paddingBottom: 22,
     paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
-  headerTitle: { color: '#fff', fontSize: 24, fontWeight: '800' },
-  headerSub: { color: '#7da8d8', fontSize: 13, marginTop: 2 },
-  refreshBtn: { backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 10, width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
-  refreshIcon: { color: '#fff', fontSize: 22, fontWeight: '700' },
+  headerTitle: { color: '#fff', fontSize: 26, fontWeight: '900', letterSpacing: -0.3 },
+  headerSub: { color: '#b8c5d4', fontSize: 13, marginTop: 4, fontWeight: '600' },
+  refreshBtn: { backgroundColor: 'rgba(251,191,36,0.15)', borderRadius: 12, width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(251,191,36,0.25)' },
+  refreshIcon: { color: '#fbbf24', fontSize: 22, fontWeight: '700' },
 
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  loadingText: { color: '#64748b', marginTop: 12, fontSize: 14 },
+  loadingText: { color: theme.colors.muted, marginTop: 14, fontSize: 14, fontWeight: '600' },
 
   ticket: {
-    backgroundColor: '#fff', borderRadius: 18, marginBottom: 16,
-    elevation: 4, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12,
+    backgroundColor: theme.colors.surface, borderRadius: theme.radius.lg, marginBottom: 16,
     flexDirection: 'row', overflow: 'hidden', position: 'relative',
+    borderWidth: 1, borderColor: theme.colors.border, ...shadows.card,
   },
   ticketLeft: { flex: 1, flexDirection: 'row' },
-  ticketPoster: { width: 80, height: 120 },
+  ticketPoster: { width: 82, height: 124 },
   ticketInfo: { flex: 1, padding: 12, justifyContent: 'space-between' },
-  movieTitle: { fontSize: 14, fontWeight: '800', color: '#0f172a', marginBottom: 4 },
-  theater: { color: '#64748b', fontSize: 12, marginBottom: 2 },
-  datetime: { color: '#64748b', fontSize: 12, marginBottom: 2 },
-  seats: { color: '#64748b', fontSize: 12, marginBottom: 6 },
-  seatsBold: { color: '#1d4ed8', fontWeight: '700' },
-  statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 },
-  confirmed: { backgroundColor: '#dcfce7' },
-  cancelled: { backgroundColor: '#fee2e2' },
-  statusText: { fontSize: 11, fontWeight: '700', color: '#166534' },
+  movieTitle: { fontSize: 15, fontWeight: '900', color: theme.colors.ink, marginBottom: 4 },
+  theater: { color: theme.colors.muted, fontSize: 12, marginBottom: 2 },
+  datetime: { color: theme.colors.muted, fontSize: 12, marginBottom: 2 },
+  seats: { color: theme.colors.muted, fontSize: 12, marginBottom: 6 },
+  seatsBold: { color: theme.colors.accentHover, fontWeight: '800' },
+  statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+  confirmed: { backgroundColor: theme.colors.successSoft },
+  cancelled: { backgroundColor: theme.colors.dangerSoft },
+  statusText: { fontSize: 11, fontWeight: '800', color: '#166534' },
 
   ticketRight: {
-    width: 88, backgroundColor: '#f8fafc', alignItems: 'center',
+    width: 90, backgroundColor: theme.colors.surfaceMuted, alignItems: 'center',
     justifyContent: 'center', padding: 10, borderLeftWidth: 1.5,
-    borderLeftColor: '#e2e8f0', borderStyle: 'dashed',
+    borderLeftColor: theme.colors.border, borderStyle: 'dashed',
   },
   qrBox: { alignItems: 'center', marginBottom: 8 },
-  qrIcon: { fontSize: 36, color: '#1d4ed8' },
-  ticketCode: { fontSize: 11, fontWeight: '800', color: '#0f172a', letterSpacing: 1, marginTop: 2 },
-  price: { fontSize: 11, color: '#1d4ed8', fontWeight: '800', textAlign: 'center', marginBottom: 4 },
-  tapDetail: { fontSize: 10, color: '#94a3b8' },
+  qrIcon: { fontSize: 34, color: theme.colors.accentHover },
+  ticketCode: { fontSize: 11, fontWeight: '900', color: theme.colors.ink, letterSpacing: 1, marginTop: 2 },
+  price: { fontSize: 12, color: theme.colors.accentHover, fontWeight: '900', textAlign: 'center', marginBottom: 4 },
+  tapDetail: { fontSize: 10, color: theme.colors.muted },
 
-  perfTop: { position: 'absolute', top: -8, right: 78, width: 16, height: 16, borderRadius: 8, backgroundColor: '#f1f5f9' },
-  perfBottom: { position: 'absolute', bottom: -8, right: 78, width: 16, height: 16, borderRadius: 8, backgroundColor: '#f1f5f9' },
+  perfTop: { position: 'absolute', top: -8, right: 80, width: 16, height: 16, borderRadius: 8, backgroundColor: theme.colors.bg },
+  perfBottom: { position: 'absolute', bottom: -8, right: 80, width: 16, height: 16, borderRadius: 8, backgroundColor: theme.colors.bg },
 
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28 },
   emptyIcon: { fontSize: 64, marginBottom: 16 },
-  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#334155', marginBottom: 8 },
-  emptyText: { color: '#94a3b8', fontSize: 14, textAlign: 'center' },
+  emptyTitle: { fontSize: 20, fontWeight: '900', color: theme.colors.inkSecondary, marginBottom: 8 },
+  emptyText: { color: theme.colors.muted, fontSize: 14, textAlign: 'center', lineHeight: 20 },
 
-  // Modal
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
-  modalCard: { backgroundColor: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingBottom: 40 },
-  handle: { width: 40, height: 4, backgroundColor: '#e2e8f0', borderRadius: 2, alignSelf: 'center', marginBottom: 20 },
-  modalMovieTitle: { fontSize: 20, fontWeight: '900', color: '#0f172a', textAlign: 'center', marginBottom: 20 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(12,18,28,0.55)', justifyContent: 'flex-end' },
+  modalCard: { backgroundColor: theme.colors.surface, borderTopLeftRadius: theme.radius.xl, borderTopRightRadius: theme.radius.xl, padding: 24, paddingBottom: 40, borderTopWidth: 1, borderColor: theme.colors.border },
+  handle: { width: 44, height: 4, backgroundColor: theme.colors.border, borderRadius: 2, alignSelf: 'center', marginBottom: 20 },
+  modalMovieTitle: { fontSize: 20, fontWeight: '900', color: theme.colors.ink, textAlign: 'center', marginBottom: 20 },
 
-  modalQRArea: { backgroundColor: '#eff6ff', borderRadius: 16, padding: 20, alignItems: 'center', marginBottom: 20 },
-  modalQRIcon: { fontSize: 72, color: '#1d4ed8' },
-  modalTicketCode: { fontSize: 28, fontWeight: '900', color: '#1d4ed8', letterSpacing: 4, marginTop: 8 },
-  modalQRHint: { color: '#64748b', fontSize: 12, marginTop: 8 },
+  modalQRArea: { backgroundColor: theme.colors.accentSoft, borderRadius: theme.radius.md, padding: 22, alignItems: 'center', marginBottom: 20, borderWidth: 1, borderColor: theme.colors.border },
+  modalQRIcon: { fontSize: 72, color: theme.colors.accentHover },
+  modalTicketCode: { fontSize: 28, fontWeight: '900', color: theme.colors.accentHover, letterSpacing: 4, marginTop: 8 },
+  modalQRHint: { color: theme.colors.muted, fontSize: 12, marginTop: 8 },
 
-  modalDetails: { backgroundColor: '#f8fafc', borderRadius: 14, padding: 14, marginBottom: 20 },
-  modalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  modalLabel: { color: '#94a3b8', fontSize: 13 },
-  modalValue: { color: '#0f172a', fontSize: 13, fontWeight: '700', maxWidth: '55%', textAlign: 'right' },
-  modalHighlight: { color: '#1d4ed8' },
+  modalDetails: { backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.md, padding: 14, marginBottom: 20 },
+  modalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: theme.colors.border },
+  modalLabel: { color: theme.colors.muted, fontSize: 13 },
+  modalValue: { color: theme.colors.ink, fontSize: 13, fontWeight: '800', maxWidth: '55%', textAlign: 'right' },
+  modalHighlight: { color: theme.colors.accentHover },
 
-  modalClose: { backgroundColor: '#1d4ed8', borderRadius: 14, padding: 15, alignItems: 'center' },
-  modalCloseText: { color: '#fff', fontWeight: '800', fontSize: 15 },
+  modalClose: { backgroundColor: theme.colors.accent, borderRadius: theme.radius.md, padding: 15, alignItems: 'center' },
+  modalCloseText: { color: '#fff', fontWeight: '900', fontSize: 15 },
 });

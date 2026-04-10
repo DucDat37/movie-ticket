@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, Image, ScrollView, TouchableOpacity,
-  StyleSheet, ActivityIndicator, Dimensions
+  StyleSheet, ActivityIndicator
 } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
-
-const { width } = Dimensions.get('window');
+import { theme, shadows } from '../theme';
 
 export default function MovieDetailScreen({ route, navigation }) {
   const { movie } = route.params;
@@ -28,7 +27,7 @@ export default function MovieDetailScreen({ route, navigation }) {
     }
   };
 
-  const getRatingColor = (r) => r >= 8 ? '#22c55e' : r >= 6 ? '#f5a623' : '#ef4444';
+  const getRatingColor = (r) => (r >= 8 ? theme.colors.success : r >= 6 ? theme.colors.accent : theme.colors.danger);
 
   return (
     <View style={styles.wrapper}>
@@ -64,7 +63,7 @@ export default function MovieDetailScreen({ route, navigation }) {
           {/* Stars */}
           <View style={styles.starsRow}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Text key={i} style={[styles.star, { color: i < Math.round(movie.rating / 2) ? '#f5a623' : '#e2e8f0' }]}>★</Text>
+              <Text key={i} style={[styles.star, { color: i < Math.round(movie.rating / 2) ? theme.colors.accent : theme.colors.border }]}>★</Text>
             ))}
             <Text style={styles.starsLabel}>({movie.rating}/10 IMDb)</Text>
           </View>
@@ -81,7 +80,7 @@ export default function MovieDetailScreen({ route, navigation }) {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Chọn suất chiếu</Text>
             {loading ? (
-              <ActivityIndicator color="#1d4ed8" style={{ marginTop: 12 }} />
+              <ActivityIndicator color={theme.colors.accent} style={{ marginTop: 12 }} />
             ) : showtimes.length === 0 ? (
               <View style={styles.noShowtimeBox}>
                 <Text style={styles.noShowtimeIcon}>📅</Text>
@@ -141,70 +140,78 @@ export default function MovieDetailScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: { flex: 1, backgroundColor: '#f1f5f9' },
+  wrapper: { flex: 1, backgroundColor: theme.colors.bg },
   container: { flex: 1 },
 
   backBtn: {
     position: 'absolute', top: 48, left: 16, zIndex: 10,
-    backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 20,
-    width: 38, height: 38, alignItems: 'center', justifyContent: 'center',
+    backgroundColor: 'rgba(12,18,28,0.55)', borderRadius: 22,
+    width: 42, height: 42, alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: 'rgba(251,191,36,0.25)',
   },
-  backBtnText: { color: '#fff', fontSize: 20, fontWeight: '700', lineHeight: 22 },
+  backBtnText: { color: '#fbbf24', fontSize: 22, fontWeight: '700', lineHeight: 24 },
   bannerWrapper: { height: 260, position: 'relative', alignItems: 'center', justifyContent: 'flex-end' },
   banner: { position: 'absolute', width: '100%', height: '100%' },
-  bannerOverlay: { position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(15,37,82,0.72)' },
-  posterCenter: { width: 120, height: 175, borderRadius: 14, marginBottom: 16, borderWidth: 3, borderColor: '#fff', elevation: 12 },
+  bannerOverlay: { position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(12,18,28,0.78)' },
+  posterCenter: {
+    width: 122, height: 178, borderRadius: theme.radius.md, marginBottom: 16,
+    borderWidth: 3, borderColor: '#fbbf24', ...shadows.card,
+  },
 
   body: { padding: 20 },
-  title: { fontSize: 24, fontWeight: '800', color: '#0f172a', textAlign: 'center', marginBottom: 14 },
+  title: { fontSize: 24, fontWeight: '900', color: theme.colors.ink, textAlign: 'center', marginBottom: 14 },
 
   ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 10 },
-  ratingCircle: { width: 64, height: 64, borderRadius: 32, borderWidth: 3, alignItems: 'center', justifyContent: 'center' },
+  ratingCircle: { width: 64, height: 64, borderRadius: 32, borderWidth: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surface },
   ratingNum: { fontSize: 20, fontWeight: '800' },
-  ratingOf: { fontSize: 10, color: '#94a3b8' },
+  ratingOf: { fontSize: 10, color: theme.colors.muted },
   metaBlock: { flex: 1, gap: 8 },
-  genreTag: { backgroundColor: '#eff6ff', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, alignSelf: 'flex-start' },
-  genreTagText: { color: '#1d4ed8', fontSize: 12, fontWeight: '700' },
-  metaText: { color: '#64748b', fontSize: 13 },
+  genreTag: { backgroundColor: theme.colors.accentSoft, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, alignSelf: 'flex-start' },
+  genreTagText: { color: theme.colors.accentHover, fontSize: 12, fontWeight: '700' },
+  metaText: { color: theme.colors.muted, fontSize: 13 },
 
   starsRow: { flexDirection: 'row', alignItems: 'center', gap: 2, marginBottom: 20 },
   star: { fontSize: 20 },
-  starsLabel: { color: '#94a3b8', fontSize: 12, marginLeft: 6 },
+  starsLabel: { color: theme.colors.muted, fontSize: 12, marginLeft: 6 },
 
-  section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a', marginBottom: 12, letterSpacing: 0.3 },
-  synopsisCard: { backgroundColor: '#fff', borderRadius: 14, padding: 16, elevation: 2 },
-  synopsis: { color: '#475569', lineHeight: 24, fontSize: 14 },
+  section: { marginBottom: 22 },
+  sectionTitle: { fontSize: 17, fontWeight: '900', color: theme.colors.ink, marginBottom: 12, letterSpacing: 0.2 },
+  synopsisCard: {
+    backgroundColor: theme.colors.surface, borderRadius: theme.radius.md, padding: 18,
+    borderWidth: 1, borderColor: theme.colors.border, ...shadows.soft,
+  },
+  synopsis: { color: theme.colors.inkSecondary, lineHeight: 24, fontSize: 15 },
 
-  noShowtimeBox: { alignItems: 'center', padding: 24, backgroundColor: '#fff', borderRadius: 14 },
+  noShowtimeBox: { alignItems: 'center', padding: 24, backgroundColor: theme.colors.surface, borderRadius: theme.radius.md, borderWidth: 1, borderColor: theme.colors.border },
   noShowtimeIcon: { fontSize: 36, marginBottom: 8 },
-  noShowtime: { color: '#94a3b8', fontStyle: 'italic', fontSize: 14 },
+  noShowtime: { color: theme.colors.muted, fontStyle: 'italic', fontSize: 14 },
 
   showtimeCard: {
-    backgroundColor: '#fff', borderRadius: 16, padding: 14,
-    marginRight: 12, alignItems: 'center', minWidth: 130,
-    elevation: 3, borderWidth: 2, borderColor: 'transparent',
-    shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8,
+    backgroundColor: theme.colors.surface, borderRadius: theme.radius.md, padding: 14,
+    marginRight: 12, alignItems: 'center', minWidth: 132,
+    borderWidth: 2, borderColor: theme.colors.border,
+    ...shadows.soft,
   },
-  showtimeSelected: { backgroundColor: '#1d4ed8', borderColor: '#3b82f6', elevation: 6 },
-  showtimeDate: { fontSize: 11, color: '#94a3b8', marginBottom: 4, fontWeight: '600' },
-  showtimeTime: { fontSize: 22, fontWeight: '800', color: '#0f172a' },
-  showtimeDivider: { width: '80%', height: 1, backgroundColor: '#e2e8f0', marginVertical: 8 },
-  showtimeTheater: { fontSize: 11, color: '#64748b', textAlign: 'center', lineHeight: 16 },
-  showtimePrice: { fontSize: 11, color: '#1d4ed8', fontWeight: '700', marginTop: 6 },
+  showtimeSelected: { backgroundColor: theme.colors.primary, borderColor: theme.colors.accent, elevation: 6 },
+  showtimeDate: { fontSize: 11, color: theme.colors.muted, marginBottom: 4, fontWeight: '700' },
+  showtimeTime: { fontSize: 22, fontWeight: '900', color: theme.colors.ink },
+  showtimeDivider: { width: '80%', height: 1, backgroundColor: theme.colors.border, marginVertical: 8 },
+  showtimeTheater: { fontSize: 11, color: theme.colors.muted, textAlign: 'center', lineHeight: 16 },
+  showtimePrice: { fontSize: 11, color: theme.colors.accentHover, fontWeight: '800', marginTop: 6 },
   wt: { color: '#fff' },
-  checkMark: { position: 'absolute', top: 8, right: 8, backgroundColor: '#22c55e', borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
-  checkMarkText: { color: '#fff', fontSize: 11, fontWeight: '800' },
+  checkMark: { position: 'absolute', top: 8, right: 8, backgroundColor: theme.colors.success, borderRadius: 10, width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+  checkMarkText: { color: '#fff', fontSize: 12, fontWeight: '800' },
 
   stickyBottom: {
-    backgroundColor: '#fff', padding: 16, paddingBottom: 24,
-    elevation: 20, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 16,
-    borderTopLeftRadius: 20, borderTopRightRadius: 20,
+    backgroundColor: theme.colors.surface, padding: 16, paddingBottom: 26,
+    elevation: 20, shadowColor: '#000', shadowOpacity: 0.14, shadowRadius: 18,
+    borderTopLeftRadius: theme.radius.lg, borderTopRightRadius: theme.radius.lg,
+    borderTopWidth: 1, borderTopColor: theme.colors.border,
   },
   selectedInfo: { marginBottom: 10 },
-  selectedLabel: { fontSize: 13, fontWeight: '700', color: '#1d4ed8' },
-  selectedTheater: { fontSize: 12, color: '#64748b', marginTop: 2 },
-  continueBtn: { backgroundColor: '#1d4ed8', borderRadius: 14, padding: 16, alignItems: 'center' },
-  disabled: { backgroundColor: '#cbd5e1' },
+  selectedLabel: { fontSize: 13, fontWeight: '800', color: theme.colors.accentHover },
+  selectedTheater: { fontSize: 12, color: theme.colors.muted, marginTop: 2 },
+  continueBtn: { backgroundColor: theme.colors.accent, borderRadius: theme.radius.md, padding: 16, alignItems: 'center' },
+  disabled: { backgroundColor: theme.colors.borderStrong },
   continueBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 });

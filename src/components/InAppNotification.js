@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { theme } from '../theme';
 
 export default function InAppNotification({ visible, title, body, onHide }) {
   const translateY = useRef(new Animated.Value(-120)).current;
@@ -34,19 +35,21 @@ export default function InAppNotification({ visible, title, body, onHide }) {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute', top: 50, left: 12, right: 12, zIndex: 9999,
-    backgroundColor: '#1e293b', borderRadius: 16, padding: 14,
+    position: 'absolute', top: 52, left: 12, right: 12, zIndex: 9999,
+    backgroundColor: theme.colors.primaryDark, borderRadius: 18, padding: 14,
     flexDirection: 'row', alignItems: 'center',
-    shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 12, elevation: 20,
+    borderWidth: 1, borderColor: 'rgba(251,191,36,0.2)',
+    shadowColor: '#000', shadowOpacity: 0.3, shadowRadius: 14, elevation: 22,
   },
   iconBox: {
-    width: 44, height: 44, borderRadius: 12, backgroundColor: '#1d4ed8',
+    width: 46, height: 46, borderRadius: 14, backgroundColor: 'rgba(217,119,6,0.35)',
     alignItems: 'center', justifyContent: 'center', marginRight: 12,
+    borderWidth: 1, borderColor: 'rgba(251,191,36,0.35)',
   },
   icon: { fontSize: 22 },
   content: { flex: 1 },
-  title: { color: '#fff', fontWeight: '800', fontSize: 14, marginBottom: 3 },
-  body: { color: '#94a3b8', fontSize: 12, lineHeight: 17 },
+  title: { color: '#fff', fontWeight: '900', fontSize: 14, marginBottom: 4 },
+  body: { color: '#b8c5d4', fontSize: 12, lineHeight: 18 },
   close: { padding: 4, marginLeft: 8 },
-  closeText: { color: '#475569', fontSize: 16 },
+  closeText: { color: '#6b7280', fontSize: 16, fontWeight: '700' },
 });

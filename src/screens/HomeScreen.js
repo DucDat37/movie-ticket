@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity,
-  StyleSheet, Image, TextInput, ActivityIndicator, StatusBar, Dimensions
+  StyleSheet, Image, TextInput, ActivityIndicator, StatusBar
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { theme, shadows } from '../theme';
 
-const { width } = Dimensions.get('window');
 const GENRES = ['Tất cả', 'Hành động', 'Tình cảm', 'Kinh dị', 'Khoa học viễn tưởng', 'Hài'];
 
 export default function HomeScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
   const [movies, setMovies] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState('');
@@ -38,7 +41,7 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  const getRatingColor = (r) => r >= 8 ? '#22c55e' : r >= 6 ? '#f5a623' : '#ef4444';
+  const getRatingColor = (r) => (r >= 8 ? theme.colors.success : r >= 6 ? theme.colors.accent : theme.colors.danger);
 
   const renderMovie = ({ item }) => (
     <TouchableOpacity
@@ -66,6 +69,7 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity
           style={styles.bookBtn}
           onPress={() => navigation.navigate('MovieDetail', { movie: item })}
+          activeOpacity={0.88}
         >
           <Text style={styles.bookBtnText}>Đặt vé ngay</Text>
         </TouchableOpacity>
@@ -75,34 +79,44 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0f2552" />
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.primaryDark} />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>🎬 MovieTix</Text>
-          <Text style={styles.headerSub}>Đặt vé xem phim dễ dàng</Text>
+      <LinearGradient
+        colors={['#0c121c', '#1a2f4a', '#243b5c']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 12 }]}
+      >
+        <View style={styles.headerRow}>
+          <View style={styles.headerTextBlock}>
+            <Text style={styles.headerKicker}>Rạp của bạn</Text>
+            <Text style={styles.headerTitle}>MovieTix</Text>
+            <Text style={styles.headerSub}>Đặt vé nhanh — chọn phim yêu thích</Text>
+          </View>
+          <View style={styles.headerBadge}>
+            <Text style={styles.headerBadgeNum}>{filtered.length}</Text>
+            <Text style={styles.headerBadgeText}>phim</Text>
+          </View>
         </View>
-        <View style={styles.headerBadge}>
-          <Text style={styles.headerBadgeText}>{filtered.length} phim</Text>
-        </View>
-      </View>
+      </LinearGradient>
 
-      {/* Search */}
-      <View style={styles.searchWrapper}>
-        <Text style={styles.searchIcon}>🔍</Text>
-        <TextInput
-          style={styles.search}
-          placeholder="Tìm kiếm phim..."
-          placeholderTextColor="#94a3b8"
-          value={search}
-          onChangeText={setSearch}
-        />
-        {search.length > 0 && (
-          <TouchableOpacity onPress={() => setSearch('')}>
-            <Text style={styles.clearBtn}>✕</Text>
-          </TouchableOpacity>
-        )}
+      {/* Search — chồng lên mép gradient */}
+      <View style={[styles.searchOuter, { marginTop: -22 }]}>
+        <View style={styles.searchWrapper}>
+          <Text style={styles.searchIcon}>⌕</Text>
+          <TextInput
+            style={styles.search}
+            placeholder="Tìm theo tên phim..."
+            placeholderTextColor={theme.colors.muted}
+            value={search}
+            onChangeText={setSearch}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Text style={styles.clearBtn}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {/* Genre filter */}
@@ -127,7 +141,7 @@ export default function HomeScreen({ navigation }) {
       {/* Movie list */}
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#3b82f6" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={styles.loadingText}>Đang tải phim...</Text>
         </View>
       ) : filtered.length === 0 ? (
@@ -152,74 +166,96 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f1f5f9' },
+  container: { flex: 1, backgroundColor: theme.colors.bg },
 
   header: {
-    backgroundColor: '#0f2552',
-    paddingTop: 52, paddingBottom: 20, paddingHorizontal: 20,
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingBottom: 36,
+    paddingHorizontal: 20,
   },
-  headerTitle: { color: '#fff', fontSize: 26, fontWeight: '800', letterSpacing: 0.5 },
-  headerSub: { color: '#7da8d8', fontSize: 12, marginTop: 2 },
-  headerBadge: { backgroundColor: '#1e40af', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
-  headerBadgeText: { color: '#93c5fd', fontSize: 12, fontWeight: '700' },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
+  headerTextBlock: { flex: 1, paddingRight: 12 },
+  headerKicker: { color: '#fbbf24', fontSize: 11, fontWeight: '800', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 6 },
+  headerTitle: { color: '#fff', fontSize: 30, fontWeight: '900', letterSpacing: -0.5 },
+  headerSub: { color: '#b8c2d0', fontSize: 13, marginTop: 6, lineHeight: 18 },
+  headerBadge: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: theme.radius.md,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(251, 191, 36, 0.35)',
+    alignItems: 'center',
+    minWidth: 64,
+  },
+  headerBadgeNum: { color: '#fbbf24', fontSize: 20, fontWeight: '900' },
+  headerBadgeText: { color: '#9ca8b8', fontSize: 11, fontWeight: '700', marginTop: 2 },
 
+  searchOuter: { paddingHorizontal: 16, zIndex: 2, marginBottom: 6 },
   searchWrapper: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff', marginHorizontal: 16, marginTop: 14, marginBottom: 10,
-    borderRadius: 14, paddingHorizontal: 14, elevation: 3,
-    shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.lg,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    ...shadows.card,
   },
-  searchIcon: { fontSize: 16, marginRight: 8 },
-  search: { flex: 1, paddingVertical: 13, fontSize: 14, color: '#1e293b' },
-  clearBtn: { color: '#94a3b8', fontSize: 16, paddingLeft: 8 },
+  searchIcon: { fontSize: 18, marginRight: 10, color: theme.colors.accent, fontWeight: '700' },
+  search: { flex: 1, paddingVertical: 14, fontSize: 15, color: theme.colors.ink },
+  clearBtn: { color: theme.colors.muted, fontSize: 15, paddingLeft: 8, fontWeight: '600' },
 
-  genreWrapper: { backgroundColor: '#f1f5f9', paddingBottom: 8, zIndex: 1 },
+  genreWrapper: { backgroundColor: theme.colors.bg, paddingBottom: 10, zIndex: 1 },
   genreBtn: {
-    paddingHorizontal: 16, paddingVertical: 9, borderRadius: 20,
-    marginRight: 8, backgroundColor: '#e2e8f0', height: 38,
+    paddingHorizontal: 18, paddingVertical: 10, borderRadius: 22,
+    marginRight: 8, backgroundColor: theme.colors.surface,
+    height: 40,
     justifyContent: 'center', alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
-  genreActive: { backgroundColor: '#1d4ed8' },
-  genreText: { color: '#475569', fontSize: 13, fontWeight: '600', whiteSpace: 'nowrap' },
+  genreActive: { backgroundColor: theme.colors.accent, borderColor: theme.colors.accent },
+  genreText: { color: theme.colors.inkSecondary, fontSize: 13, fontWeight: '700' },
   genreTextActive: { color: '#fff' },
 
   card: {
-    flexDirection: 'row', backgroundColor: '#fff', borderRadius: 18,
+    flexDirection: 'row', backgroundColor: theme.colors.surface, borderRadius: theme.radius.lg,
     marginBottom: 16, overflow: 'hidden',
-    elevation: 4, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    ...shadows.card,
   },
   posterWrapper: { position: 'relative' },
-  poster: { width: 115, height: 165 },
+  poster: { width: 118, height: 168 },
   ratingBadge: {
     position: 'absolute', top: 8, left: 8,
-    paddingHorizontal: 7, paddingVertical: 3, borderRadius: 8,
+    paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8,
   },
   ratingBadgeText: { color: '#fff', fontSize: 11, fontWeight: '800' },
 
   info: { flex: 1, padding: 14, justifyContent: 'space-between' },
-  movieTitle: { fontSize: 15, fontWeight: '800', color: '#0f172a', lineHeight: 21 },
+  movieTitle: { fontSize: 16, fontWeight: '800', color: theme.colors.ink, lineHeight: 22 },
 
   genreRow: { flexDirection: 'row', marginTop: 6 },
-  genreTag: { backgroundColor: '#eff6ff', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 },
-  genreTagText: { color: '#1d4ed8', fontSize: 11, fontWeight: '700' },
+  genreTag: { backgroundColor: theme.colors.accentSoft, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 },
+  genreTagText: { color: theme.colors.accentHover, fontSize: 11, fontWeight: '700' },
 
   metaRow: { flexDirection: 'row', gap: 12, marginTop: 6 },
-  metaItem: { color: '#64748b', fontSize: 12 },
+  metaItem: { color: theme.colors.muted, fontSize: 12 },
 
-  synopsis: { color: '#64748b', fontSize: 12, lineHeight: 18, marginTop: 6 },
+  synopsis: { color: theme.colors.muted, fontSize: 12, lineHeight: 18, marginTop: 6 },
 
   bookBtn: {
-    backgroundColor: '#1d4ed8', borderRadius: 10,
-    paddingVertical: 9, alignItems: 'center', marginTop: 8,
+    backgroundColor: theme.colors.accent,
+    borderRadius: theme.radius.sm,
+    paddingVertical: 10, alignItems: 'center', marginTop: 10,
   },
-  bookBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  bookBtnText: { color: '#fff', fontWeight: '800', fontSize: 13, letterSpacing: 0.3 },
 
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  loadingText: { color: '#64748b', marginTop: 12, fontSize: 14 },
+  loadingText: { color: theme.colors.muted, marginTop: 14, fontSize: 14, fontWeight: '600' },
 
-  emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
   emptyIcon: { fontSize: 56, marginBottom: 12 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#334155' },
-  emptyText: { color: '#94a3b8', marginTop: 6, fontSize: 13 },
+  emptyTitle: { fontSize: 18, fontWeight: '800', color: theme.colors.inkSecondary },
+  emptyText: { color: theme.colors.muted, marginTop: 8, fontSize: 14, textAlign: 'center' },
 });

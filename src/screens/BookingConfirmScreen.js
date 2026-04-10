@@ -6,6 +6,7 @@ import {
 import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db, auth } from '../config/firebase';
 import { useNotification } from '../navigation/AppNavigator';
+import { theme, shadows } from '../theme';
 
 export default function BookingConfirmScreen({ route, navigation }) {
   const { movie, showtime, selectedSeats, totalPrice } = route.params;
@@ -225,90 +226,90 @@ function ModalInfoRow({ label, value }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: { flex: 1, backgroundColor: '#f1f5f9' },
+  wrapper: { flex: 1, backgroundColor: theme.colors.bg },
   container: { flex: 1 },
 
   header: {
-    backgroundColor: '#0f2552', paddingTop: 52, paddingBottom: 18,
+    backgroundColor: theme.colors.primaryDark, paddingTop: 52, paddingBottom: 18,
     paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
-  backBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 10 },
-  backBtnText: { color: '#fff', fontSize: 20, fontWeight: '700' },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: '800' },
+  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(251,191,36,0.12)', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(251,191,36,0.2)' },
+  backBtnText: { color: '#fbbf24', fontSize: 22, fontWeight: '700' },
+  headerTitle: { color: '#f8fafc', fontSize: 18, fontWeight: '900' },
 
   movieCard: {
-    flexDirection: 'row', backgroundColor: '#fff', margin: 16, borderRadius: 18,
-    overflow: 'hidden', elevation: 4, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12,
+    flexDirection: 'row', backgroundColor: theme.colors.surface, margin: 16, borderRadius: theme.radius.lg,
+    overflow: 'hidden', borderWidth: 1, borderColor: theme.colors.border, ...shadows.card,
   },
-  moviePoster: { width: 90, height: 130 },
+  moviePoster: { width: 92, height: 132 },
   movieInfo: { flex: 1, padding: 14, justifyContent: 'center', gap: 8 },
-  movieTitle: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
-  genreTag: { backgroundColor: '#eff6ff', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' },
-  genreTagText: { color: '#1d4ed8', fontSize: 11, fontWeight: '700' },
-  movieMeta: { color: '#64748b', fontSize: 13 },
+  movieTitle: { fontSize: 17, fontWeight: '900', color: theme.colors.ink },
+  genreTag: { backgroundColor: theme.colors.accentSoft, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' },
+  genreTagText: { color: theme.colors.accentHover, fontSize: 11, fontWeight: '800' },
+  movieMeta: { color: theme.colors.muted, fontSize: 13 },
 
   ticketCard: {
-    backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 18,
-    overflow: 'hidden', elevation: 4, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12,
+    backgroundColor: theme.colors.surface, marginHorizontal: 16, borderRadius: theme.radius.lg,
+    overflow: 'hidden', borderWidth: 1, borderColor: theme.colors.border, ...shadows.card,
   },
-  ticketHeader: { backgroundColor: '#0f2552', paddingVertical: 10, paddingHorizontal: 16 },
-  ticketHeaderText: { color: '#7da8d8', fontSize: 11, fontWeight: '800', letterSpacing: 1.5 },
+  ticketHeader: { backgroundColor: theme.colors.primary, paddingVertical: 12, paddingHorizontal: 16 },
+  ticketHeaderText: { color: '#fbbf24', fontSize: 11, fontWeight: '900', letterSpacing: 2 },
 
   infoRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 13 },
   infoIcon: { fontSize: 16, marginRight: 10 },
-  infoLabel: { flex: 1, color: '#64748b', fontSize: 14 },
-  infoValue: { color: '#0f172a', fontSize: 14, fontWeight: '700', maxWidth: '50%', textAlign: 'right' },
-  infoHighlight: { color: '#1d4ed8' },
-  rowDivider: { height: 1, backgroundColor: '#f1f5f9', marginHorizontal: 16 },
+  infoLabel: { flex: 1, color: theme.colors.muted, fontSize: 14 },
+  infoValue: { color: theme.colors.ink, fontSize: 14, fontWeight: '800', maxWidth: '50%', textAlign: 'right' },
+  infoHighlight: { color: theme.colors.accentHover },
+  rowDivider: { height: 1, backgroundColor: theme.colors.border, marginHorizontal: 16 },
 
   perforated: { flexDirection: 'row', alignItems: 'center', marginVertical: 4 },
-  circleLeft: { width: 20, height: 20, borderRadius: 10, backgroundColor: '#f1f5f9', marginLeft: -10 },
-  circleRight: { width: 20, height: 20, borderRadius: 10, backgroundColor: '#f1f5f9', marginRight: -10 },
-  dashedLine: { flex: 1, height: 1, borderWidth: 1, borderColor: '#e2e8f0', borderStyle: 'dashed' },
+  circleLeft: { width: 20, height: 20, borderRadius: 10, backgroundColor: theme.colors.bg, marginLeft: -10 },
+  circleRight: { width: 20, height: 20, borderRadius: 10, backgroundColor: theme.colors.bg, marginRight: -10 },
+  dashedLine: { flex: 1, height: 1, borderWidth: 1, borderColor: theme.colors.border, borderStyle: 'dashed' },
 
   priceRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 16,
   },
-  priceLabel: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
-  priceSub: { fontSize: 12, color: '#94a3b8', marginTop: 2 },
-  priceValue: { fontSize: 24, fontWeight: '900', color: '#1d4ed8' },
+  priceLabel: { fontSize: 14, fontWeight: '800', color: theme.colors.ink },
+  priceSub: { fontSize: 12, color: theme.colors.muted, marginTop: 2 },
+  priceValue: { fontSize: 26, fontWeight: '900', color: theme.colors.accentHover },
 
   noteCard: {
-    backgroundColor: '#fefce8', margin: 16, borderRadius: 14,
-    padding: 14, borderLeftWidth: 3, borderLeftColor: '#f5a623',
+    backgroundColor: theme.colors.accentSoft, margin: 16, borderRadius: theme.radius.md,
+    padding: 16, borderLeftWidth: 4, borderLeftColor: theme.colors.accent,
   },
-  noteTitle: { fontSize: 13, fontWeight: '800', color: '#92400e', marginBottom: 8 },
-  noteText: { color: '#78350f', fontSize: 12, marginBottom: 4, lineHeight: 18 },
+  noteTitle: { fontSize: 13, fontWeight: '900', color: theme.colors.accentHover, marginBottom: 8 },
+  noteText: { color: theme.colors.inkSecondary, fontSize: 12, marginBottom: 4, lineHeight: 18 },
 
   stickyBottom: {
-    backgroundColor: '#fff', padding: 16, paddingBottom: 28,
+    backgroundColor: theme.colors.surface, padding: 16, paddingBottom: 30,
     elevation: 20, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 16,
-    borderTopLeftRadius: 20, borderTopRightRadius: 20,
+    borderTopLeftRadius: theme.radius.lg, borderTopRightRadius: theme.radius.lg,
+    borderTopWidth: 1, borderTopColor: theme.colors.border,
   },
-  confirmBtn: { backgroundColor: '#1d4ed8', borderRadius: 14, padding: 17, alignItems: 'center' },
-  confirmText: { color: '#fff', fontWeight: '800', fontSize: 16 },
+  confirmBtn: { backgroundColor: theme.colors.accent, borderRadius: theme.radius.md, padding: 17, alignItems: 'center' },
+  confirmText: { color: '#fff', fontWeight: '900', fontSize: 16 },
 
-  // Modal
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center', padding: 20 },
-  modalCard: { backgroundColor: '#fff', borderRadius: 24, padding: 28, width: '100%', alignItems: 'center' },
-  successCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#22c55e', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(12,18,28,0.72)', alignItems: 'center', justifyContent: 'center', padding: 20 },
+  modalCard: { backgroundColor: theme.colors.surface, borderRadius: theme.radius.xl, padding: 28, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: theme.colors.border },
+  successCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: theme.colors.success, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   successIcon: { color: '#fff', fontSize: 40, fontWeight: '900' },
-  successTitle: { fontSize: 24, fontWeight: '900', color: '#0f172a', marginBottom: 4 },
-  successSub: { color: '#64748b', fontSize: 14, marginBottom: 20 },
+  successTitle: { fontSize: 24, fontWeight: '900', color: theme.colors.ink, marginBottom: 4 },
+  successSub: { color: theme.colors.muted, fontSize: 14, marginBottom: 20 },
 
-  ticketCodeBox: { backgroundColor: '#eff6ff', borderRadius: 16, padding: 16, alignItems: 'center', width: '100%', marginBottom: 20 },
-  ticketCodeLabel: { color: '#64748b', fontSize: 12, fontWeight: '600', marginBottom: 6 },
-  ticketCode: { fontSize: 32, fontWeight: '900', color: '#1d4ed8', letterSpacing: 4 },
-  ticketCodeHint: { color: '#94a3b8', fontSize: 11, marginTop: 6 },
+  ticketCodeBox: { backgroundColor: theme.colors.accentSoft, borderRadius: theme.radius.md, padding: 18, alignItems: 'center', width: '100%', marginBottom: 20, borderWidth: 1, borderColor: theme.colors.border },
+  ticketCodeLabel: { color: theme.colors.muted, fontSize: 12, fontWeight: '700', marginBottom: 6 },
+  ticketCode: { fontSize: 32, fontWeight: '900', color: theme.colors.accentHover, letterSpacing: 4 },
+  ticketCodeHint: { color: theme.colors.muted, fontSize: 11, marginTop: 6 },
 
-  modalInfo: { width: '100%', backgroundColor: '#f8fafc', borderRadius: 12, padding: 14, marginBottom: 20 },
+  modalInfo: { width: '100%', backgroundColor: theme.colors.surfaceMuted, borderRadius: theme.radius.md, padding: 14, marginBottom: 20 },
   modalInfoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  modalInfoLabel: { color: '#94a3b8', fontSize: 13 },
-  modalInfoValue: { color: '#0f172a', fontSize: 13, fontWeight: '700', maxWidth: '60%', textAlign: 'right' },
+  modalInfoLabel: { color: theme.colors.muted, fontSize: 13 },
+  modalInfoValue: { color: theme.colors.ink, fontSize: 13, fontWeight: '800', maxWidth: '60%', textAlign: 'right' },
 
-  modalBtn: { backgroundColor: '#1d4ed8', borderRadius: 12, padding: 14, alignItems: 'center', width: '100%', marginBottom: 10 },
-  modalBtnText: { color: '#fff', fontWeight: '800', fontSize: 15 },
-  modalBtnOutline: { borderRadius: 12, padding: 12, alignItems: 'center', width: '100%', borderWidth: 1.5, borderColor: '#e2e8f0' },
-  modalBtnOutlineText: { color: '#475569', fontWeight: '700', fontSize: 14 },
+  modalBtn: { backgroundColor: theme.colors.accent, borderRadius: theme.radius.md, padding: 14, alignItems: 'center', width: '100%', marginBottom: 10 },
+  modalBtnText: { color: '#fff', fontWeight: '900', fontSize: 15 },
+  modalBtnOutline: { borderRadius: theme.radius.md, padding: 12, alignItems: 'center', width: '100%', borderWidth: 1.5, borderColor: theme.colors.border },
+  modalBtnOutlineText: { color: theme.colors.inkSecondary, fontWeight: '800', fontSize: 14 },
 });
